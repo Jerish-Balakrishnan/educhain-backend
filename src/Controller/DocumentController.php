@@ -25,7 +25,11 @@ class DocumentController extends AbstractController
 
             if (empty($documents)) {
                 return new JsonResponse(
-                    ['message' => 'No documents found.'],
+                    [
+                        'status' => 'error',
+                        'message' => 'No documents found.',
+                        'data' => null,
+                    ],
                     JsonResponse::HTTP_NOT_FOUND
                 );
             }
@@ -36,13 +40,24 @@ class DocumentController extends AbstractController
             }
 
             return new JsonResponse(
-                ['message' => 'Documents saved successfully.', 'count' => count($documents)],
+                [
+                    'status' => 'success',
+                    'message' => 'Documents saved successfully.',
+                    'data' => [
+                        'count' => count($documents),
+                    ]
+                ],
                 JsonResponse::HTTP_OK
             );
         } catch (\Exception $e) {
             // Handle any exceptions and return an error response
             return new JsonResponse(
-                ['error' => 'An error occurred while processing the documents.', 'details' => $e->getMessage()],
+                [
+                    'status' => 'error',
+                    'message' => 'An error occurred while processing the documents.',
+                    'data' => null,
+                    'error_details' => $e->getMessage(),
+                ],
                 JsonResponse::HTTP_INTERNAL_SERVER_ERROR
             );
         }
